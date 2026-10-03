@@ -2,7 +2,7 @@
 
 **Source:** [MATCHLAB_SPEC.md](MATCHLAB_SPEC.md)  
 **Implementation context:** [CONTEXT.md](CONTEXT.md)  
-**Status:** Planned. No task below is marked complete.  
+**Status:** Task 1 research decision complete; implementation has not started.
 **First release:** One selected soccer league, with Vercel for the web app, Supabase for PostgreSQL/Auth/Storage, and a separate Python worker.
 
 ## How to use this plan
@@ -18,6 +18,8 @@ The first major milestone is a reproducible soccer baseline with an evaluation r
 **Build:** Compare candidate providers for future fixtures, historical results, timestamps, team and player statistics, lineups, commercial rights, rate limits, and cost. Select one league and one approved primary provider. Record fallback sources only where their terms permit use.
 
 **Done when:** A coverage matrix maps every initially proposed active factor to a source available both historically and before future matches. The chosen league, provider, rights, expected update delay, and budget are documented. Unsupported factors remain inactive. [Spec §§2, 7, 8](MATCHLAB_SPEC.md#7-data-and-evidence-pipeline).
+
+**Completed (3 October 2026):** [Provider decision and factor coverage matrix](DATA_PROVIDER_DECISION.md) select the EPL and football-data.org's permanent Free plan. The documented initial factor set is `S01`, `S02` and `S36`; all other soccer factors stay inactive. Task 7 must verify free-account historical coverage and payloads before enabling those factors in code. Public use must follow the provider's attribution and data-rights terms.
 
 ### Task 2. Freeze the first evaluation protocol
 
@@ -224,4 +226,4 @@ The first major milestone is a reproducible soccer baseline with an evaluation r
 | **Operational gate — after Task 29** | Preview and Production deployments, automatic result updates, safe settlement, complete prospective coverage reporting. |
 | **Learning gate — after Task 31** | Versioned promotion policy, shadow evidence, rollback test, and unchanged historical forecasts. |
 
-**Next task:** Task 1, select the first soccer league and data provider. Its coverage matrix determines which factors can be built and tested next.
+**Next task:** Task 2, freeze the first evaluation protocol. Task 7 later checks actual provider payloads before factor activation.

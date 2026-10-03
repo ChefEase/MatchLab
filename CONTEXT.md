@@ -2,7 +2,7 @@
 
 This file is the developer entry point. The product requirements and evaluation method live in [MATCHLAB_SPEC.md](MATCHLAB_SPEC.md); the sequential build tasks live in [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md). The executable Supabase PostgreSQL schema lives in [supabase/migrations/20261003000000_initial.sql](supabase/migrations/20261003000000_initial.sql) and is reproduced in full below so the context file can be handed to a developer on its own.
 
-**Status:** Architecture and schema design. No application, data provider, database, worker, or Vercel deployment has been created yet.
+**Status:** Architecture and schema design. [Task 1](DATA_PROVIDER_DECISION.md) selects the EPL and football-data.org's permanent Free plan for the first soccer build. Actual free-account historical coverage still requires a Task 7 check. No application, database, worker, or Vercel deployment has been created yet.
 
 ## Stack and deployment
 
