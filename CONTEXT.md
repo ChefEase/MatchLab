@@ -2,7 +2,7 @@
 
 This file is the developer entry point. The product requirements live in [MATCHLAB_SPEC.md](MATCHLAB_SPEC.md); the frozen first soccer evaluation method lives in [EVALUATION_PROTOCOL_v1.md](EVALUATION_PROTOCOL_v1.md); the sequential build tasks live in [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md). The executable Supabase PostgreSQL schema lives in [supabase/migrations/20261003000000_initial.sql](supabase/migrations/20261003000000_initial.sql) and is reproduced in full below so the context file can be handed to a developer on its own.
 
-**Status:** [Tasks 1 and 2](DEVELOPMENT_PLAN.md) are complete. Task 3 has created a Next.js web scaffold, Python worker scaffold, npm workspace and local setup guide; the web dependency install and start check remain for the developer to run. No database or Vercel deployment has been created yet.
+**Status:** [Tasks 1–3](DEVELOPMENT_PLAN.md) are complete. The Next.js web scaffold, Python worker scaffold, npm workspace and local setup guide have passed local web and worker health checks; web lint, typecheck and formatting also pass. Task 4, local Supabase schema validation, is next. No database or Vercel deployment has been created yet.
 
 ## Stack and deployment
 

@@ -2,7 +2,7 @@
 
 **Source:** [MATCHLAB_SPEC.md](MATCHLAB_SPEC.md)  
 **Implementation context:** [CONTEXT.md](CONTEXT.md)  
-**Status:** Tasks 1 and 2 complete; Task 3 scaffolded, pending local web install/start verification.
+**Status:** Tasks 1–3 complete. Task 4 is next.
 
 **First release:** One selected soccer league, with Vercel for the web app, Supabase for PostgreSQL/Auth/Storage, and a separate Python worker.
 
@@ -38,13 +38,15 @@ The first major milestone is a reproducible soccer baseline with an evaluation r
 
 **Done when:** A new developer can install dependencies and run empty web and worker health checks locally from the guide.
 
-**Progress (3 October 2026):** [README](README.md) now documents npm-workspace web setup and a Python virtual environment. The Next.js and worker scaffolds, process health checks, formatting/lint configuration, Supabase local config and secret exclusions are present. JSON/TOML/JavaScript syntax and the worker CLI/HTTP health checks passed without installing packages. The earlier no-install instruction means the web dependency install, lint/typecheck and HTTP health check still need to be run locally before marking Task 3 complete.
+**Completed (3 October 2026):** [README](README.md) documents npm-workspace web setup and a Python virtual environment. The Next.js and worker scaffolds, process health checks, formatting/lint configuration, Supabase local config and secret exclusions are present. The worker CLI/HTTP health checks passed. The developer installed web dependencies and confirmed `/api/health` locally; `lint:web`, `typecheck:web` and `format:check` pass. Next's generated `next-env.d.ts` is excluded from formatting.
 
 ### Task 4. Validate the Supabase schema
 
 **Build:** Run [the initial migration](supabase/migrations/20261003000000_initial.sql) against a fresh local Supabase project. Fix SQL or permission issues found during execution. Confirm the `matchlab` schema is not exposed through the Data API, and test Auth-to-`app_users` creation.
 
 **Done when:** The migration applies from scratch and basic insert/read tests pass for users, fixtures, snapshots, jobs, and reports. Browser roles cannot read private app tables.
+
+**Progress (3 October 2026):** The developer reports that the migration applied without errors in the hosted Supabase SQL Editor. Run [the rollback-only smoke check](supabase/tests/task4_schema_smoke.sql) to verify insert/read paths and browser-role grants; create a test Supabase Auth user first to exercise the user path. Confirm `matchlab` is absent from the hosted project's Data API Exposed schemas. A clean local replay is still needed for the stated fresh-local-project gate.
 
 ### Task 5. Seed rules and the factor registry
 
@@ -231,4 +233,4 @@ The first major milestone is a reproducible soccer baseline with an evaluation r
 | **Operational gate — after Task 29** | Preview and Production deployments, automatic result updates, safe settlement, complete prospective coverage reporting. |
 | **Learning gate — after Task 31** | Versioned promotion policy, shadow evidence, rollback test, and unchanged historical forecasts. |
 
-**Next check:** Run the Task 3 web install/start, health, lint and type checks from the README. Then mark Task 3 complete before Task 4.
+**Next check:** Task 4 — validate the initial Supabase migration locally, including Auth-to-`app_users` creation and private-table access rules.
