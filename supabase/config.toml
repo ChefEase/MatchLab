@@ -1,0 +1,8 @@
+project_id = "matchlab"
+
+[api]
+# Keep application tables in the private matchlab schema out of PostgREST.
+schemas = ["public", "storage", "graphql_public"]
+
+[db]
+major_version = 15

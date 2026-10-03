@@ -2,7 +2,8 @@
 
 **Source:** [MATCHLAB_SPEC.md](MATCHLAB_SPEC.md)  
 **Implementation context:** [CONTEXT.md](CONTEXT.md)  
-**Status:** Tasks 1 and 2 complete; Task 3 is next.
+**Status:** Tasks 1 and 2 complete; Task 3 scaffolded, pending local web install/start verification.
+
 **First release:** One selected soccer league, with Vercel for the web app, Supabase for PostgreSQL/Auth/Storage, and a separate Python worker.
 
 ## How to use this plan
@@ -36,6 +37,8 @@ The first major milestone is a reproducible soccer baseline with an evaluation r
 **Build:** Create the `apps/web`, `services/worker`, `packages/contracts`, and `supabase` structure from [CONTEXT.md](CONTEXT.md). Add package scripts, Python environment, formatting, linting, and a local setup guide. Keep secrets out of source control.
 
 **Done when:** A new developer can install dependencies and run empty web and worker health checks locally from the guide.
+
+**Progress (3 October 2026):** [README](README.md) now documents npm-workspace web setup and a Python virtual environment. The Next.js and worker scaffolds, process health checks, formatting/lint configuration, Supabase local config and secret exclusions are present. JSON/TOML/JavaScript syntax and the worker CLI/HTTP health checks passed without installing packages. The earlier no-install instruction means the web dependency install, lint/typecheck and HTTP health check still need to be run locally before marking Task 3 complete.
 
 ### Task 4. Validate the Supabase schema
 
@@ -228,4 +231,4 @@ The first major milestone is a reproducible soccer baseline with an evaluation r
 | **Operational gate — after Task 29** | Preview and Production deployments, automatic result updates, safe settlement, complete prospective coverage reporting. |
 | **Learning gate — after Task 31** | Versioned promotion policy, shadow evidence, rollback test, and unchanged historical forecasts. |
 
-**Next task:** Task 3, bootstrap the repository.
+**Next check:** Run the Task 3 web install/start, health, lint and type checks from the README. Then mark Task 3 complete before Task 4.

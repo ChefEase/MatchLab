@@ -1,0 +1,2 @@
+-- Task 3: no fixture, user, or factor data is seeded yet.
+-- Task 5 will add the factor registry after the schema is validated.

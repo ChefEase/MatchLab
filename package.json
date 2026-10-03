@@ -1,0 +1,25 @@
+{
+  "name": "matchlab",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "dev:web": "npm --workspace @matchlab/web run dev",
+    "build:web": "npm --workspace @matchlab/web run build",
+    "start:web": "npm --workspace @matchlab/web run start",
+    "health:web": "node scripts/check_web_health.mjs",
+    "lint:web": "npm --workspace @matchlab/web run lint",
+    "typecheck:web": "npm --workspace @matchlab/web run typecheck",
+    "format": "prettier --write \"apps/web/**/*.{ts,tsx,css,json,mjs}\" \"packages/contracts/**/*.{json,md}\"",
+    "format:check": "prettier --check \"apps/web/**/*.{ts,tsx,css,json,mjs}\" \"packages/contracts/**/*.{json,md}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.6.0"
+  }
+}
