@@ -9,7 +9,7 @@ MatchLab is being built as an EPL forecasting web app. The current repository co
 | `apps/web` | Next.js App Router web app and public API, intended for Vercel. |
 | `services/worker` | Python numerical/ingestion worker, intended for a separate container host. |
 | `packages/contracts` | Shared API schemas and examples, to be added in Task 6. |
-| `supabase` | Private application schema migration and local configuration; validation is Task 4. |
+| `supabase` | Private application schema, ruleset and factor seed; hosted-project checks passed in Tasks 4–5. |
 | `infra/worker` | Future production worker deployment configuration. |
 
 The JavaScript side uses **npm workspaces**. There is one root `package-lock.json` after the first install. No package install is needed to read or edit the project. Use Node.js 20.9+ and Python 3.11+ to run it. On Windows PowerShell, use `npm.cmd` if the `npm.ps1` shim is blocked by execution policy. [Next.js installation requirements](https://nextjs.org/docs/app/getting-started/installation).
@@ -70,4 +70,8 @@ The football-data.org token belongs on the server/worker side, never in a `NEXT_
 
 ## Current limits and next task
 
-Task 3 adds only structure, start commands, lint/format configuration and process health checks. The developer reports that the initial migration applied without errors in the hosted Supabase SQL Editor. For Task 4, run [the rollback-only schema smoke check](supabase/tests/task4_schema_smoke.sql) in that editor and verify that its final result row shows PASS. If the Auth column shows SKIP, create a test user through Supabase Auth and rerun it. In the hosted project's **Data API settings**, confirm `matchlab` is absent from **Exposed schemas**; the local `supabase/config.toml` setting does not control the hosted project. A fresh local migration run remains a separate reproducibility check when the Supabase CLI is available. No real fixtures, forecasts or background jobs have been loaded by this scaffold.
+The developer reports that the initial migration and [schema smoke check](supabase/tests/task4_schema_smoke.sql) passed in the hosted Supabase project, including the Auth user path. They confirmed `matchlab` is absent from **Data API → Exposed schemas**. A fresh local replay has not been reported.
+
+The developer ran [seed.sql](supabase/seed.sql) successfully in the verified Supabase project. It created the EPL regulation ruleset and 100 catalog definitions: three active soccer factors, 47 candidate soccer factors and 50 candidate basketball factors. The seed can be rerun without duplicating rows. To regenerate it after an intentional catalogue edit, run `python scripts/generate_factor_seed.py` and review the diff.
+
+The local web page and web/worker health endpoints can be tested now. Match browsing, sign-in, forecast jobs and report pages do not exist yet; their user flows cannot be tested end to end. No real fixtures, forecasts or background jobs have been loaded by this scaffold. Task 6 defines shared API contracts before those features are built.

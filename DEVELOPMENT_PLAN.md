@@ -2,7 +2,7 @@
 
 **Source:** [MATCHLAB_SPEC.md](MATCHLAB_SPEC.md)  
 **Implementation context:** [CONTEXT.md](CONTEXT.md)  
-**Status:** Tasks 1–3 complete. Task 4 is next.
+**Status:** Tasks 1–5 complete. Task 6 is next.
 
 **First release:** One selected soccer league, with Vercel for the web app, Supabase for PostgreSQL/Auth/Storage, and a separate Python worker.
 
@@ -46,13 +46,15 @@ The first major milestone is a reproducible soccer baseline with an evaluation r
 
 **Done when:** The migration applies from scratch and basic insert/read tests pass for users, fixtures, snapshots, jobs, and reports. Browser roles cannot read private app tables.
 
-**Progress (3 October 2026):** The developer reports that the migration applied without errors in the hosted Supabase SQL Editor. Run [the rollback-only smoke check](supabase/tests/task4_schema_smoke.sql) to verify insert/read paths and browser-role grants; create a test Supabase Auth user first to exercise the user path. Confirm `matchlab` is absent from the hosted project's Data API Exposed schemas. A clean local replay is still needed for the stated fresh-local-project gate.
+**Completed (3 October 2026):** The developer reports that the initial migration and [rollback-only schema smoke check](supabase/tests/task4_schema_smoke.sql) passed in the correct hosted Supabase project, including the Auth user path. They confirmed `matchlab` is absent from the hosted Data API Exposed schemas. Validation used the hosted project; a separate clean local replay was not reported.
 
 ### Task 5. Seed rules and the factor registry
 
 **Build:** Add the first soccer ruleset and all 50 soccer and 50 basketball candidate factor definitions. Mark each factor candidate, experimental, active, or retired. Activate only factors supported by Task 1.
 
 **Done when:** A clean database has the complete registry and explicit statuses, with no invented measurements or “50/50 active” claim. [Spec §8](MATCHLAB_SPEC.md#8-candidate-factor-registries).
+
+**Completed (3 October 2026):** [Seed SQL](supabase/seed.sql) and its [standard-library generator](scripts/generate_factor_seed.py) define the EPL ruleset and all 100 catalog entries from the spec. The developer ran the seed successfully in the verified Supabase project. Only `S01`, `S02` and `S36` are active registry entries for the first baseline; the other 97 remain inactive. Registry activation records source eligibility; no engine version or measured accuracy exists yet.
 
 ### Task 6. Define shared data contracts
 
