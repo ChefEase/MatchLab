@@ -2,7 +2,7 @@
 
 **Source:** [MATCHLAB_SPEC.md](MATCHLAB_SPEC.md)  
 **Implementation context:** [CONTEXT.md](CONTEXT.md)  
-**Status:** Task 1 research decision complete; implementation has not started.
+**Status:** Task 1 in progress; the free-account coverage check remains open.
 **First release:** One selected soccer league, with Vercel for the web app, Supabase for PostgreSQL/Auth/Storage, and a separate Python worker.
 
 ## How to use this plan
@@ -19,7 +19,7 @@ The first major milestone is a reproducible soccer baseline with an evaluation r
 
 **Done when:** A coverage matrix maps every initially proposed active factor to a source available both historically and before future matches. The chosen league, provider, rights, expected update delay, and budget are documented. Unsupported factors remain inactive. [Spec §§2, 7, 8](MATCHLAB_SPEC.md#7-data-and-evidence-pipeline).
 
-**Completed (3 October 2026):** [Provider decision and factor coverage matrix](DATA_PROVIDER_DECISION.md) select the EPL and football-data.org's permanent Free plan. The documented initial factor set is `S01`, `S02` and `S36`; all other soccer factors stay inactive. Task 7 must verify free-account historical coverage and payloads before enabling those factors in code. Public use must follow the provider's attribution and data-rights terms.
+**Progress (3 October 2026):** [Provider decision and provisional factor coverage matrix](DATA_PROVIDER_DECISION.md) select the EPL and football-data.org's permanent Free plan. The proposed initial factor set is `S01`, `S02` and `S36`; all other soccer factors stay inactive. The free account is created; run [the local coverage check](scripts/check_free_epl.ps1) to confirm historical EPL seasons, upcoming fixtures and required fields. Measure result delay on an observed matchday and confirm intended public-use rights before launch.
 
 ### Task 2. Freeze the first evaluation protocol
 
@@ -226,4 +226,4 @@ The first major milestone is a reproducible soccer baseline with an evaluation r
 | **Operational gate — after Task 29** | Preview and Production deployments, automatic result updates, safe settlement, complete prospective coverage reporting. |
 | **Learning gate — after Task 31** | Versioned promotion policy, shadow evidence, rollback test, and unchanged historical forecasts. |
 
-**Next task:** Task 2, freeze the first evaluation protocol. Task 7 later checks actual provider payloads before factor activation.
+**Next check:** Finish Task 1's free-account data audit. Start Task 2 only after the baseline fields and usable historical seasons are confirmed.
