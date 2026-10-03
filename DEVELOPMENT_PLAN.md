@@ -2,7 +2,7 @@
 
 **Source:** [MATCHLAB_SPEC.md](MATCHLAB_SPEC.md)  
 **Implementation context:** [CONTEXT.md](CONTEXT.md)  
-**Status:** Task 1 in progress; the free-account coverage check remains open.
+**Status:** Tasks 1 and 2 complete; Task 3 is next.
 **First release:** One selected soccer league, with Vercel for the web app, Supabase for PostgreSQL/Auth/Storage, and a separate Python worker.
 
 ## How to use this plan
@@ -19,13 +19,15 @@ The first major milestone is a reproducible soccer baseline with an evaluation r
 
 **Done when:** A coverage matrix maps every initially proposed active factor to a source available both historically and before future matches. The chosen league, provider, rights, expected update delay, and budget are documented. Unsupported factors remain inactive. [Spec §§2, 7, 8](MATCHLAB_SPEC.md#7-data-and-evidence-pipeline).
 
-**Progress (3 October 2026):** [Provider decision and provisional factor coverage matrix](DATA_PROVIDER_DECISION.md) select the EPL and football-data.org's permanent Free plan. The proposed initial factor set is `S01`, `S02` and `S36`; all other soccer factors stay inactive. The free account is created; run [the local coverage check](scripts/check_free_epl.ps1) to confirm historical EPL seasons, upcoming fixtures and required fields. Measure result delay on an observed matchday and confirm intended public-use rights before launch.
+**Completed (3 October 2026):** [Provider decision and verified factor coverage matrix](DATA_PROVIDER_DECISION.md) select the EPL and football-data.org's permanent Free plan. A token-free account audit found three complete historical seasons with 380 scored matches and no missing team IDs, plus 330 future fixtures in the current season. The initial source-backed factor set is `S01`, `S02` and `S36`; all other soccer factors stay inactive. A conservative 24-hour missing-result window is documented pending observed delay measurements. Public use must follow the provider's attribution and rights terms.
 
 ### Task 2. Freeze the first evaluation protocol
 
 **Build:** Define official forecast scope, cutoff horizons, chronological fit/validation/test dates, eligible fixture rules, league/home benchmark, scoring metrics, and the first improvement gate. Specify the point prediction used for score error.
 
 **Done when:** A versioned protocol can be applied without changing dates, exclusions, or metrics after seeing test results. [Spec §12](MATCHLAB_SPEC.md#12-evaluation-and-first-experiment).
+
+**Completed (3 October 2026):** [Evaluation protocol v1.0](EVALUATION_PROTOCOL_v1.md) freezes the EPL 2023/24 fit, 2024/25 validation and 2025/26 untouched test seasons; H24 scope and cutoff; eligible fixtures; M0 league/home benchmark; M1 strength candidate; point predictions, metrics, paired uncertainty and promotion gates. Historical availability is explicitly reconstructed with a fixed 48-hour lag. No results have been inspected for model selection.
 
 ## Stage B — Establish the project and trusted data
 
@@ -226,4 +228,4 @@ The first major milestone is a reproducible soccer baseline with an evaluation r
 | **Operational gate — after Task 29** | Preview and Production deployments, automatic result updates, safe settlement, complete prospective coverage reporting. |
 | **Learning gate — after Task 31** | Versioned promotion policy, shadow evidence, rollback test, and unchanged historical forecasts. |
 
-**Next check:** Finish Task 1's free-account data audit. Start Task 2 only after the baseline fields and usable historical seasons are confirmed.
+**Next task:** Task 3, bootstrap the repository.
