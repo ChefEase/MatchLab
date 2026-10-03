@@ -1,6 +1,6 @@
 # MatchLab
 
-MatchLab is being built as an EPL forecasting web app. The current repository contains the [product specification](MATCHLAB_SPEC.md), [data-provider decision](DATA_PROVIDER_DECISION.md), [frozen evaluation protocol](EVALUATION_PROTOCOL_v1.md), [development plan](DEVELOPMENT_PLAN.md), Supabase schema draft, and **Task 3 application scaffolds**. The page and health endpoints prove that the web and Python projects start; they do not forecast matches or connect to a database yet.
+MatchLab is being built as an EPL forecasting web app. The current repository contains the [product specification](MATCHLAB_SPEC.md), [data-provider decision](DATA_PROVIDER_DECISION.md), [frozen evaluation protocol](EVALUATION_PROTOCOL_v1.md), [development plan](DEVELOPMENT_PLAN.md), Supabase schema and factor seed, [shared API contracts](packages/contracts/README.md), and application scaffolds. The page and health endpoints prove that the web and Python projects start; they do not forecast matches or connect to a database yet.
 
 ## Repository layout
 
@@ -8,7 +8,7 @@ MatchLab is being built as an EPL forecasting web app. The current repository co
 | --- | --- |
 | `apps/web` | Next.js App Router web app and public API, intended for Vercel. |
 | `services/worker` | Python numerical/ingestion worker, intended for a separate container host. |
-| `packages/contracts` | Shared API schemas and examples, to be added in Task 6. |
+| `packages/contracts` | Versioned API schemas, examples and TypeScript validator; the worker has a Python validator. |
 | `supabase` | Private application schema, ruleset and factor seed; hosted-project checks passed in Tasks 4–5. |
 | `infra/worker` | Future production worker deployment configuration. |
 
@@ -74,4 +74,13 @@ The developer reports that the initial migration and [schema smoke check](supaba
 
 The developer ran [seed.sql](supabase/seed.sql) successfully in the verified Supabase project. It created the EPL regulation ruleset and 100 catalog definitions: three active soccer factors, 47 candidate soccer factors and 50 candidate basketball factors. The seed can be rerun without duplicating rows. To regenerate it after an intentional catalogue edit, run `python scripts/generate_factor_seed.py` and review the diff.
 
-The local web page and web/worker health endpoints can be tested now. Match browsing, sign-in, forecast jobs and report pages do not exist yet; their user flows cannot be tested end to end. No real fixtures, forecasts or background jobs have been loaded by this scaffold. Task 6 defines shared API contracts before those features are built.
+The local web page and web/worker health endpoints can be tested now. Match browsing, sign-in, forecast jobs and report pages do not exist yet; their user flows cannot be tested end to end. No real fixtures, forecasts or background jobs have been loaded by this scaffold. The shared API contracts are now defined for those later features.
+The [v1 contracts](packages/contracts/README.md) now pass the same seven valid and ten invalid examples in TypeScript and Python. Task 7 is fixture ingestion and identity mapping; it will begin connecting real provider data to the private database.
+
+## Task 7: fixture ingestion
+
+Run [the fixture-ingestion migration](supabase/migrations/20261003000001_fixture_ingestion.sql) in the **same** Supabase project where the initial migration and factor seed passed. Then run the entire [rollback-only Task 7 smoke test](supabase/tests/task7_fixture_ingestion.sql). It should return `PASS: replay, schedule revision, and unknown-team review`. This test creates no lasting fixture data and needs no API token or local package installation.
+
+The [worker adapter](services/worker/src/matchlab_worker/football_data.py) requests the EPL competition, season-specific teams, and season-specific matches through football-data.org v4. Its server-side database sync requires the optional `db` dependency and `FOOTBALL_DATA_API_TOKEN` plus `DATABASE_URL` in the worker environment. The worker Dockerfile includes the `db` dependency. For a local live sync, install the declared `db` extra in the worker virtual environment yourself, then run `python -m matchlab_worker sync-fixtures --season 2026` with those environment variables set. The token and database URL must stay out of Git and chat messages. It writes source records, provider ID mappings and fixture revisions; unknown teams go to the private review queue. Player mappings are recorded only if the provider actually supplies squad entries. Match scores and statistics are Task 8.
+
+Offline adapter tests run with `python -m unittest discover -s tests -p 'test_*.py'`; they do not call the provider or database. A successful SQL smoke test verifies database replay and revision behavior, while a real sync will still need its own coverage and permission check before publishing fixtures.

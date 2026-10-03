@@ -1,0 +1,108 @@
+{
+  "samples": {
+    "fixture": {
+      "schema_version": 1,
+      "id": "11111111-1111-4111-8111-111111111111",
+      "sport": "soccer",
+      "competition_id": "22222222-2222-4222-8222-222222222222",
+      "ruleset_id": "33333333-3333-4333-8333-333333333333",
+      "home_team": { "id": "44444444-4444-4444-8444-444444444444", "name": "Example Home" },
+      "away_team": { "id": "55555555-5555-4555-8555-555555555555", "name": "Example Away" },
+      "scheduled_at": "2026-10-10T15:00:00Z",
+      "neutral_venue": false,
+      "status": "scheduled"
+    },
+    "evidence_snapshot": {
+      "schema_version": 1,
+      "id": "66666666-6666-4666-8666-666666666666",
+      "fixture_id": "11111111-1111-4111-8111-111111111111",
+      "cutoff_at": "2026-10-09T15:00:00Z",
+      "content_hash": "example-hash",
+      "lineup_status": "unknown",
+      "completeness_status": "partial",
+      "features": [
+        {
+          "feature_id": "S01",
+          "entity_id": "44444444-4444-4444-8444-444444444444",
+          "status": "observed",
+          "raw_value": 1.5,
+          "unit": "goals per match",
+          "source_ids": ["77777777-7777-4777-8777-777777777777"],
+          "available_at": "2026-10-07T17:00:00Z",
+          "retrieved_at": "2026-10-08T09:00:00Z"
+        }
+      ]
+    },
+    "job_request": {
+      "schema_version": 1,
+      "fixture_id": "11111111-1111-4111-8111-111111111111",
+      "mode": "quick",
+      "idempotency_key": "example-request-1"
+    },
+    "job_status": {
+      "schema_version": 1,
+      "id": "88888888-8888-4888-8888-888888888888",
+      "fixture_id": "11111111-1111-4111-8111-111111111111",
+      "snapshot_id": "66666666-6666-4666-8666-666666666666",
+      "engine_version_id": "99999999-9999-4999-8999-999999999999",
+      "kind": "official",
+      "mode": "quick",
+      "target_runs": 10000,
+      "completed_runs": 10000,
+      "status": "completed",
+      "forecast_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "created_at": "2026-10-09T15:00:00Z",
+      "updated_at": "2026-10-09T15:02:00Z"
+    },
+    "forecast_report": {
+      "schema_version": 1,
+      "id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "job_id": "88888888-8888-4888-8888-888888888888",
+      "fixture_id": "11111111-1111-4111-8111-111111111111",
+      "snapshot_id": "66666666-6666-4666-8666-666666666666",
+      "engine_version_id": "99999999-9999-4999-8999-999999999999",
+      "sport": "soccer",
+      "kind": "official",
+      "scope": "soccer_regulation",
+      "forecast_horizon": "H24",
+      "completed_runs": 10000,
+      "published_at": "2026-10-09T15:02:00Z",
+      "outcome_probabilities": { "home": 0.5, "draw": 0.25, "away": 0.25 },
+      "expected_scores": { "home": 0.5, "away": 0.25 },
+      "score_counts": [
+        { "home": 1, "away": 0, "count": 5000 },
+        { "home": 0, "away": 0, "count": 2500 },
+        { "home": 0, "away": 1, "count": 2500 }
+      ]
+    },
+    "scenario": {
+      "schema_version": 1,
+      "id": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+      "owner_user_id": "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
+      "base_snapshot_id": "66666666-6666-4666-8666-666666666666",
+      "created_at": "2026-10-09T15:05:00Z",
+      "overlay": {
+        "player_availability": [{ "player_id": "dddddddd-dddd-4ddd-8ddd-dddddddddddd", "status": "unavailable" }],
+        "expected_minutes": [{ "player_id": "dddddddd-dddd-4ddd-8ddd-dddddddddddd", "minutes": 0 }]
+      }
+    },
+    "api_error": {
+      "schema_version": 1,
+      "code": "STALE_DEPENDENCY",
+      "message": "This scenario uses an older evidence snapshot.",
+      "request_id": "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee"
+    }
+  },
+  "negative_cases": [
+    { "name": "wrong fixture sport", "contract": "fixture", "set": { "sport": "cricket" } },
+    { "name": "invalid calendar date", "contract": "fixture", "set": { "scheduled_at": "2026-02-30T15:00:00Z" } },
+    { "name": "wrong fixture version", "contract": "fixture", "set": { "schema_version": 2 } },
+    { "name": "boolean fixture version", "contract": "fixture", "set": { "schema_version": true } },
+    { "name": "invalid evidence status", "contract": "evidence_snapshot", "set": { "lineup_status": "invented" } },
+    { "name": "unsupported job mode", "contract": "job_request", "set": { "mode": "instant" } },
+    { "name": "invalid job state", "contract": "job_status", "set": { "status": "almost_done" } },
+    { "name": "invalid report sport", "contract": "forecast_report", "set": { "sport": "basketball" } },
+    { "name": "arbitrary power slider", "contract": "scenario", "set": { "overlay": { "power_boost": 0.4 } } },
+    { "name": "unknown API code", "contract": "api_error", "set": { "code": "RANDOM" } }
+  ]
+}

@@ -1,0 +1,303 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://matchlab.local/contracts/v1",
+  "title": "MatchLab API contracts v1",
+  "$defs": {
+    "fixture": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "id",
+        "sport",
+        "competition_id",
+        "ruleset_id",
+        "home_team",
+        "away_team",
+        "scheduled_at",
+        "neutral_venue",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": 1 },
+        "id": { "type": "string", "format": "uuid" },
+        "sport": { "enum": ["soccer", "basketball"] },
+        "competition_id": { "type": "string", "format": "uuid" },
+        "ruleset_id": { "type": "string", "format": "uuid" },
+        "home_team": {
+          "type": "object",
+          "required": ["id", "name"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string", "format": "uuid" },
+            "name": { "type": "string", "minLength": 1 }
+          }
+        },
+        "away_team": {
+          "type": "object",
+          "required": ["id", "name"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string", "format": "uuid" },
+            "name": { "type": "string", "minLength": 1 }
+          }
+        },
+        "scheduled_at": { "type": "string", "format": "date-time" },
+        "venue_name": { "type": "string" },
+        "neutral_venue": { "type": "boolean" },
+        "status": { "enum": ["scheduled", "in_progress", "completed", "postponed", "cancelled", "abandoned"] }
+      }
+    },
+    "evidence_snapshot": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "id",
+        "fixture_id",
+        "cutoff_at",
+        "content_hash",
+        "lineup_status",
+        "completeness_status",
+        "features"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": 1 },
+        "id": { "type": "string", "format": "uuid" },
+        "fixture_id": { "type": "string", "format": "uuid" },
+        "cutoff_at": { "type": "string", "format": "date-time" },
+        "content_hash": { "type": "string", "minLength": 1 },
+        "lineup_status": { "enum": ["unknown", "projected", "confirmed"] },
+        "completeness_status": { "enum": ["complete", "partial", "blocked"] },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["feature_id", "status", "source_ids"],
+            "additionalProperties": false,
+            "properties": {
+              "feature_id": { "type": "string", "pattern": "^[SB](0[1-9]|[1-4][0-9]|50)$" },
+              "entity_id": { "type": "string", "format": "uuid" },
+              "status": { "enum": ["observed", "estimated", "imputed", "unavailable", "conflict", "experimental"] },
+              "raw_value": { "type": ["number", "string", "boolean", "null"] },
+              "transformed_value": { "type": ["number", "string", "boolean", "null"] },
+              "unit": { "type": "string" },
+              "source_ids": { "type": "array", "items": { "type": "string", "format": "uuid" } },
+              "available_at": { "type": "string", "format": "date-time" },
+              "retrieved_at": { "type": "string", "format": "date-time" },
+              "uncertainty": { "type": "object" }
+            }
+          }
+        }
+      }
+    },
+    "job_request": {
+      "type": "object",
+      "required": ["schema_version", "fixture_id", "mode", "idempotency_key"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": 1 },
+        "fixture_id": { "type": "string", "format": "uuid" },
+        "mode": { "enum": ["quick", "deep"] },
+        "idempotency_key": { "type": "string", "minLength": 1, "maxLength": 128 }
+      }
+    },
+    "job_status": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "id",
+        "fixture_id",
+        "snapshot_id",
+        "engine_version_id",
+        "kind",
+        "mode",
+        "target_runs",
+        "completed_runs",
+        "status",
+        "created_at",
+        "updated_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": 1 },
+        "id": { "type": "string", "format": "uuid" },
+        "fixture_id": { "type": "string", "format": "uuid" },
+        "snapshot_id": { "type": "string", "format": "uuid" },
+        "engine_version_id": { "type": "string", "format": "uuid" },
+        "kind": { "enum": ["official", "scenario", "shadow"] },
+        "mode": { "enum": ["quick", "deep"] },
+        "target_runs": { "enum": [10000, 1000000] },
+        "completed_runs": { "type": "integer", "minimum": 0 },
+        "status": {
+          "enum": [
+            "preparing",
+            "queued",
+            "running",
+            "aggregating",
+            "completed",
+            "failed",
+            "cancel_requested",
+            "cancelled"
+          ]
+        },
+        "forecast_id": { "type": "string", "format": "uuid" },
+        "error_code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "forecast_report": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "id",
+        "job_id",
+        "fixture_id",
+        "snapshot_id",
+        "engine_version_id",
+        "sport",
+        "kind",
+        "scope",
+        "forecast_horizon",
+        "completed_runs",
+        "published_at",
+        "outcome_probabilities",
+        "expected_scores",
+        "score_counts"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": 1 },
+        "id": { "type": "string", "format": "uuid" },
+        "job_id": { "type": "string", "format": "uuid" },
+        "fixture_id": { "type": "string", "format": "uuid" },
+        "snapshot_id": { "type": "string", "format": "uuid" },
+        "engine_version_id": { "type": "string", "format": "uuid" },
+        "sport": { "const": "soccer" },
+        "kind": { "enum": ["official", "scenario", "shadow"] },
+        "scope": { "const": "soccer_regulation" },
+        "forecast_horizon": { "type": "string", "minLength": 1 },
+        "completed_runs": { "type": "integer", "minimum": 1 },
+        "published_at": { "type": "string", "format": "date-time" },
+        "outcome_probabilities": {
+          "type": "object",
+          "required": ["home", "draw", "away"],
+          "additionalProperties": false,
+          "properties": {
+            "home": { "type": "number", "minimum": 0, "maximum": 1 },
+            "draw": { "type": "number", "minimum": 0, "maximum": 1 },
+            "away": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "expected_scores": {
+          "type": "object",
+          "required": ["home", "away"],
+          "additionalProperties": false,
+          "properties": {
+            "home": { "type": "number", "minimum": 0 },
+            "away": { "type": "number", "minimum": 0 }
+          }
+        },
+        "score_counts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["home", "away", "count"],
+            "additionalProperties": false,
+            "properties": {
+              "home": { "type": "integer", "minimum": 0 },
+              "away": { "type": "integer", "minimum": 0 },
+              "count": { "type": "integer", "minimum": 1 }
+            }
+          }
+        }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "required": ["schema_version", "id", "owner_user_id", "base_snapshot_id", "created_at", "overlay"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": 1 },
+        "id": { "type": "string", "format": "uuid" },
+        "owner_user_id": { "type": "string", "format": "uuid" },
+        "base_snapshot_id": { "type": "string", "format": "uuid" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "overlay": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "player_availability": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["player_id", "status"],
+                "additionalProperties": false,
+                "properties": {
+                  "player_id": { "type": "string", "format": "uuid" },
+                  "status": { "enum": ["available", "unavailable"] }
+                }
+              }
+            },
+            "expected_minutes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["player_id", "minutes"],
+                "additionalProperties": false,
+                "properties": {
+                  "player_id": { "type": "string", "format": "uuid" },
+                  "minutes": { "type": "number", "minimum": 0 }
+                }
+              }
+            },
+            "starting_lineup": {
+              "type": "object",
+              "required": ["home", "away"],
+              "additionalProperties": false,
+              "properties": {
+                "home": {
+                  "type": "array",
+                  "minItems": 11,
+                  "maxItems": 11,
+                  "items": { "type": "string", "format": "uuid" }
+                },
+                "away": {
+                  "type": "array",
+                  "minItems": 11,
+                  "maxItems": 11,
+                  "items": { "type": "string", "format": "uuid" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "api_error": {
+      "type": "object",
+      "required": ["schema_version", "code", "message"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": 1 },
+        "code": {
+          "enum": [
+            "VALIDATION_ERROR",
+            "INVALID_ASSUMPTIONS",
+            "STALE_DEPENDENCY",
+            "QUOTA_EXCEEDED",
+            "DEPENDENCY_UNAVAILABLE",
+            "UNAUTHORIZED",
+            "FORBIDDEN",
+            "NOT_FOUND",
+            "INTERNAL_ERROR"
+          ]
+        },
+        "message": { "type": "string", "minLength": 1 },
+        "request_id": { "type": "string", "format": "uuid" },
+        "details": { "type": "object" }
+      }
+    }
+  }
+}

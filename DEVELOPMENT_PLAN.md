@@ -2,7 +2,7 @@
 
 **Source:** [MATCHLAB_SPEC.md](MATCHLAB_SPEC.md)  
 **Implementation context:** [CONTEXT.md](CONTEXT.md)  
-**Status:** Tasks 1–5 complete. Task 6 is next.
+**Status:** Tasks 1–6 complete. Task 7 is next.
 
 **First release:** One selected soccer league, with Vercel for the web app, Supabase for PostgreSQL/Auth/Storage, and a separate Python worker.
 
@@ -62,11 +62,15 @@ The first major milestone is a reproducible soccer baseline with an evaluation r
 
 **Done when:** A sample payload accepted by one service is accepted by the other, and incompatible payloads fail with a clear error. [Spec §11](MATCHLAB_SPEC.md#11-application-architecture-and-deployment).
 
+**Completed (3 October 2026):** [Contract catalog v1](packages/contracts/schemas/v1.json) defines fixture, evidence snapshot, job request/status, soccer forecast report, scenario and API error payloads. [TypeScript](packages/contracts/src/validate.ts) and [Python](services/worker/src/matchlab_worker/contracts.py) validators checked the same seven valid and ten invalid [examples](packages/contracts/examples/v1_cases.json); both accepted/rejected them as expected. Contract build, web typecheck and formatting passed. The contracts validate transport shape; service-specific rules such as ownership, cutoff eligibility, score consistency and lineup feasibility remain with later tasks.
+
 ### Task 7. Ingest fixtures and map identities
 
 **Build:** Implement one provider adapter for leagues, teams, players, fixtures, and schedule revisions. Resolve provider IDs to internal IDs. Store source, event, availability, and retrieval times.
 
 **Done when:** Replaying a fixture feed does not duplicate fixtures, and a schedule correction produces a new revision. Unknown entity matches enter a review state.
+
+**Progress (3 October 2026):** The [football-data.org v4 adapter](services/worker/src/matchlab_worker/football_data.py), [database migration](supabase/migrations/20261003000001_fixture_ingestion.sql) and [rollback-only database smoke test](supabase/tests/task7_fixture_ingestion.sql) are prepared. Offline adapter tests pass. Apply the migration after the initial schema and ruleset seed, then run the smoke test in the verified Supabase project before marking Task 7 complete. A live API-to-database sync has not yet been exercised here; no token or database password was available to this workspace.
 
 ### Task 8. Ingest historical results and supported statistics
 
