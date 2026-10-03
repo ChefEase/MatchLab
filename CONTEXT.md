@@ -1,6 +1,6 @@
 ﻿# MatchLab project context
 
-This file is the developer entry point. The product requirements and evaluation plan live in [MATCHLAB_SPEC.md](MATCHLAB_SPEC.md). The executable Supabase PostgreSQL schema lives in [supabase/migrations/20261003000000_initial.sql](supabase/migrations/20261003000000_initial.sql) and is reproduced in full below so the context file can be handed to a developer on its own.
+This file is the developer entry point. The product requirements and evaluation method live in [MATCHLAB_SPEC.md](MATCHLAB_SPEC.md); the sequential build tasks live in [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md). The executable Supabase PostgreSQL schema lives in [supabase/migrations/20261003000000_initial.sql](supabase/migrations/20261003000000_initial.sql) and is reproduced in full below so the context file can be handed to a developer on its own.
 
 **Status:** Architecture and schema design. No application, data provider, database, worker, or Vercel deployment has been created yet.
 
@@ -23,79 +23,58 @@ Supabase is the selected database, authentication, and artifact-storage provider
 
 ```text
 predict/
-â”œâ”€â”€ CONTEXT.md                         # This implementation handoff
-â”œâ”€â”€ MATCHLAB_SPEC.md                   # Product, modelling, and evaluation specification
-â”œâ”€â”€ README.md                          # Local setup, commands, and deployment links
-â”œâ”€â”€ package.json                       # JS workspace scripts and package manager version
-â”œâ”€â”€ pnpm-workspace.yaml                # JS workspace boundaries
-â”œâ”€â”€ .env.example                       # Variable names only; no credentials
-â”œâ”€â”€ apps/
-â”‚   â””â”€â”€ web/                           # Vercel project root
-â”‚       â”œâ”€â”€ package.json
-â”‚       â”œâ”€â”€ next.config.ts
-â”‚       â”œâ”€â”€ public/                     # Static assets
-â”‚       â”œâ”€â”€ src/
-â”‚       â”‚   â”œâ”€â”€ app/                    # App Router pages, layouts, and API routes
-â”‚       â”‚   â”‚   â”œâ”€â”€ (public)/
-â”‚       â”‚   â”‚   â”‚   â”œâ”€â”€ page.tsx        # Home and upcoming matches
-â”‚       â”‚   â”‚   â”‚   â”œâ”€â”€ matches/[matchId]/page.tsx
-â”‚       â”‚   â”‚   â”‚   â”œâ”€â”€ forecasts/[forecastId]/page.tsx
-â”‚       â”‚   â”‚   â”‚   â”œâ”€â”€ track-record/page.tsx
-â”‚       â”‚   â”‚   â”‚   â””â”€â”€ methodology/page.tsx
-â”‚       â”‚   â”‚   â”œâ”€â”€ (account)/
-â”‚       â”‚   â”‚   â”‚   â”œâ”€â”€ saved/page.tsx
-â”‚       â”‚   â”‚   â”‚   â”œâ”€â”€ scenarios/[scenarioId]/page.tsx
-â”‚       â”‚   â”‚   â”‚   â””â”€â”€ matches/[matchId]/scenarios/new/page.tsx
-â”‚       â”‚   â”‚   â”œâ”€â”€ (admin)/admin/
-â”‚       â”‚   â”‚   â”‚   â”œâ”€â”€ research/page.tsx
-â”‚       â”‚   â”‚   â”‚   â”œâ”€â”€ evaluations/page.tsx
-â”‚       â”‚   â”‚   â”‚   â””â”€â”€ operations/page.tsx
-â”‚       â”‚   â”‚   â””â”€â”€ api/                # Route Handlers; validate auth and inputs
-â”‚       â”‚   â”‚       â”œâ”€â”€ fixtures/
-â”‚       â”‚   â”‚       â”œâ”€â”€ forecasts/
-â”‚       â”‚   â”‚       â”œâ”€â”€ jobs/
-â”‚       â”‚   â”‚       â”œâ”€â”€ scenarios/
-â”‚       â”‚   â”‚       â”œâ”€â”€ evaluations/
-â”‚       â”‚   â”‚       â””â”€â”€ saved-items/
-â”‚       â”‚   â”œâ”€â”€ features/               # Match, forecast, scenario, and track-record UI
-â”‚       â”‚   â”œâ”€â”€ components/ui/          # Shared accessible primitives
-â”‚       â”‚   â”œâ”€â”€ lib/server/             # DB access, auth, permissions, job submission
-â”‚       â”‚   â”œâ”€â”€ lib/supabase/           # Browser and server Supabase Auth clients
-â”‚       â”‚   â”œâ”€â”€ lib/client/             # Typed API client and browser utilities
-â”‚       â”‚   â””â”€â”€ styles/
-â”‚       â””â”€â”€ tests/                       # UI and API tests
-â”œâ”€â”€ services/
-â”‚   â””â”€â”€ worker/
-â”‚       â”œâ”€â”€ pyproject.toml
-â”‚       â”œâ”€â”€ Dockerfile
-â”‚       â”œâ”€â”€ src/matchlab_worker/
-â”‚       â”‚   â”œâ”€â”€ main.py                # Worker and scheduler entry points
-â”‚       â”‚   â”œâ”€â”€ db/                     # Transactions, claims, checkpoints
-â”‚       â”‚   â”œâ”€â”€ providers/              # Feed adapters and entity resolution
-â”‚       â”‚   â”œâ”€â”€ ingestion/              # Fetch, validate, reconcile, deduplicate
-â”‚       â”‚   â”œâ”€â”€ evidence/               # Claims, feature values, snapshots
-â”‚       â”‚   â”œâ”€â”€ features/               # Registry, transforms, derived state
-â”‚       â”‚   â”œâ”€â”€ engines/
-â”‚       â”‚   â”‚   â”œâ”€â”€ base.py             # Shared engine contract
-â”‚       â”‚   â”‚   â”œâ”€â”€ soccer/
-â”‚       â”‚   â”‚   â””â”€â”€ basketball/
-â”‚       â”‚   â”œâ”€â”€ simulations/            # Indexed RNG, batches, aggregation
-â”‚       â”‚   â”œâ”€â”€ settlement/             # Official results and corrected revisions
-â”‚       â”‚   â”œâ”€â”€ evaluation/             # Historical and prospective metrics
-â”‚       â”‚   â””â”€â”€ learning/               # Fit, shadow test, promote, roll back
-â”‚       â””â”€â”€ tests/                       # Engine and pipeline tests
-â”œâ”€â”€ packages/
-â”‚   â””â”€â”€ contracts/                      # Versioned JSON Schema/OpenAPI shared across languages
-â”‚       â”œâ”€â”€ schemas/
-â”‚       â””â”€â”€ openapi.yaml
-â”œâ”€â”€ supabase/
-â”‚   â”œâ”€â”€ config.toml                    # Local Supabase project configuration
-â”‚   â”œâ”€â”€ migrations/                    # Ordered SQL migrations; initial schema is below
-â”‚   â””â”€â”€ seed.sql                       # Rulesets and the 100 candidate feature definitions
-â”œâ”€â”€ infra/
-â”‚   â””â”€â”€ worker/                        # Container deployment and scheduler configuration
-â””â”€â”€ tests/
-    â””â”€â”€ e2e/                            # Cross-service browser and job-flow checks
+|-- CONTEXT.md                  # Architecture and full schema
+|-- MATCHLAB_SPEC.md            # Product and modelling requirements
+|-- DEVELOPMENT_PLAN.md        # Sequential implementation tasks
+|-- README.md                   # Setup, commands, deployment links
+|-- package.json
+|-- pnpm-workspace.yaml
+|-- .env.example                # Variable names only
+|-- apps/
+|   `-- web/                    # Vercel project root
+|       |-- package.json
+|       |-- next.config.ts
+|       |-- public/
+|       |-- src/
+|       |   |-- app/
+|       |   |   |-- (public)/    # Matches, forecasts, methodology, track record
+|       |   |   |-- (account)/   # Saved items and private scenarios
+|       |   |   |-- (admin)/     # Research, evaluations, operations
+|       |   |   `-- api/        # Typed Next.js Route Handlers
+|       |   |-- features/       # Match, forecast, and scenario UI
+|       |   |-- components/ui/  # Accessible shared components
+|       |   |-- lib/server/     # DB, permissions, and jobs
+|       |   |-- lib/supabase/   # Browser and server Auth clients
+|       |   |-- lib/client/     # Typed API client
+|       |   `-- styles/
+|       `-- tests/
+|-- services/
+|   `-- worker/
+|       |-- pyproject.toml
+|       |-- Dockerfile
+|       |-- src/matchlab_worker/
+|       |   |-- providers/
+|       |   |-- ingestion/
+|       |   |-- evidence/
+|       |   |-- features/
+|       |   |-- engines/
+|       |   |   |-- soccer/
+|       |   |   `-- basketball/
+|       |   |-- simulations/
+|       |   |-- settlement/
+|       |   |-- evaluation/
+|       |   `-- learning/
+|       `-- tests/
+|-- packages/
+|   `-- contracts/             # JSON Schema and OpenAPI
+|-- supabase/
+|   |-- config.toml
+|   |-- migrations/
+|   `-- seed.sql
+|-- infra/
+|   `-- worker/
+`-- tests/
+    `-- e2e/
 ```
 
 This is the target layout, not a claim that the directories already exist. Keep route files thin; put business logic in feature or server modules. Keep Python numerical code in the worker. Define request and report schemas once under `packages/contracts`, then generate or validate language-specific types against them. The App Router `src/app` layout follows [Next.js project structure guidance](https://nextjs.org/docs/app/getting-started/project-structure).

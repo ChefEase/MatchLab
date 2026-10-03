@@ -7,6 +7,8 @@
 
 **Developer context:** The proposed repository layout and full Supabase PostgreSQL schema are in [CONTEXT.md](CONTEXT.md), with executable DDL in [supabase/migrations/20261003000000_initial.sql](supabase/migrations/20261003000000_initial.sql).
 
+**Build sequence:** Follow [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md) one task at a time.
+
 ## 1. Product overview
 
 MatchLab is a responsive web app for forecasting soccer and basketball games. A user selects a scheduled match, inspects the evidence available before it begins, and views outcome probabilities and score distributions. The user can then change a supported assumption, such as a player's availability, and compare that scenario with the official forecast. After the match, the app records how the forecast performed.
